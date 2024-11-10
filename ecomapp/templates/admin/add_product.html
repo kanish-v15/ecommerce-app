@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+            padding: 20px;
+        }
+        header {
+            background: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+        nav {
+            background: #444;
+            color: #fff;
+            padding: 10px;
+        }
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            background: #333;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: #555;
+        }
+        
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Add Product</h1>
+    </header>
+    <nav>
+        <a href="{% url 'admin_dashboard' %}">Dashboard</a>
+        <a href="{% url 'admin_add_product' %}">Add Product</a>
+        <a href="{% url 'admin_manage_categories' %}">Manage Categories</a>
+        <a href="{% url 'logout' %}">Logout</a>
+    </nav>
+    <div class="container">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div>
+                <label for="id_name">Name:</label>
+                {{ form.name }}
+            </div>
+            <div>
+                <label for="id_category">Category:</label>
+                {{ form.category }}
+            </div>
+            <div>
+                <label for="id_brand">Brand:</label>
+                {{ form.brand }}
+            </div>
+            <div>
+                <label for="id_image">Image:</label>
+                {{ form.image }}
+            </div>
+            <div>
+                <label for="id_description">Description:</label>
+                {{ form.description }}
+            </div>
+            <div>
+                <label for="id_price">Price:</label>
+                {{ form.price }}
+            </div>
+            <div>
+                <label for="id_stock">Stock:</label>
+                {{ form.stock }}
+            </div>
+            <button type="submit" class="btn">Add Product</button>
+        </form>
+    </div>
+</body>
+</html>

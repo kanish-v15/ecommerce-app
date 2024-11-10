@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Products{% endblock %}
+
+{% block content %}
+<h2 class="text-3xl font-bold mb-6">Products Page</h2>
+
+<div class="container mx-auto px-4 py-8">
+    
+    <form method="get" class="mb-8">
+        <div class="flex flex-wrap gap-4">
+            <input type="text" name="search" placeholder="Search products" value="{{ search_query }}" class="px-4 py-2 border rounded">
+            <select name="category" class="px-4 py-2 border rounded">
+                <option value="">All Categories</option>
+                {% for category in categories %}
+                    <option value="{{ category.name }}" {% if category.name == selected_category %}selected{% endif %}>
+                        {{ category.name }}
+                    </option>
+                {% endfor %}
+            </select>
+            <select name="brand" class="px-4 py-2 border rounded">
+                <option value="">All Brands</option>
+                {% for brand in brands %}
+                    <option value="{{ brand }}" {% if brand == selected_brand %}selected{% endif %}>
+                        {{ brand }}
+                    </option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">Filter</button>
+        </div>
+    </form>
+
+    <div class="container">
+        <div class="product-grid">
+            {% for product in products %}
+                <div class="product-item">
+                    <a href="{% url 'product_detail' product.id %}">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                        {% endif %}
+                    </a>
+                    <h4>{{ product.name }}</h4>
+                    <p>{{ product.price }}</p>
+                </div>
+            {% endfor %}
+        </div>
+{% endblock %}

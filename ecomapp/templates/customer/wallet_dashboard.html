@@ -1,0 +1,123 @@
+<!-- templates/customer/wallet_dashboard.html -->
+
+{% extends 'base.html' %}
+{% load custom_filters %}
+
+{% block title %}Wallet Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-8">Wallet Dashboard</h1>
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+        <h2 class="text-2xl font-bold mb-4">Current Balance</h2>
+        <p class="text-4xl font-bold text-green-600">₹{{ balance }}</p>
+    </div>
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+        <h2 class="text-2xl font-bold mb-4">Add Money</h2>
+        <form id="add-money-form">
+            {% csrf_token %}
+            <div class="mb-4">
+                <label for="amount" class="block text-sm font-medium text-gray-700">Amount (₹)</label>
+                <input type="number" id="amount" name="amount" min="0" max="1000000" step="0.01" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+            </div>
+            <div class="mb-4">
+                <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                <input type="password" id="password" name="password" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+            </div>
+            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Add Money</button>
+        </form>
+        <div id="add-money-message" class="mt-4"></div>
+    </div>
+    <div class="bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-2xl font-bold mb-4">Transaction History</h2>
+        <form method="get" class="mb-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label for="from_date" class="block text-sm font-medium text-gray-700">From Date</label>
+                    <input type="date" id="from_date" name="from_date" value="{{ from_date|date:'Y-m-d' }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                </div>
+                <div>
+                    <label for="to_date" class="block text-sm font-medium text-gray-700">To Date</label>
+                    <input type="date" id="to_date" name="to_date" value="{{ to_date|date:'Y-m-d' }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                </div>
+                <div class="flex items-end">
+                    <button type="submit" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">Filter</button>
+                </div>
+            </div>
+        </form>
+        <table class="w-full">
+            <thead>
+                <tr>
+                    <th class="text-left">Date</th>
+                    <th class="text-left">Description</th>
+                    <th class="text-left">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transaction in page_obj %}
+                <tr>
+                    <td>{{ transaction.timestamp|date:"F d, Y H:i" }}</td>
+                    <td>{{ transaction.description }}</td>
+                    <td class="{% if transaction.amount > 0 %}text-green-600{% else %}text-red-600{% endif %}">
+                        ₹{{ transaction.amount|abs_value }}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3">No transactions found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="mt-4">
+            {% include "pagination.html" with page=page_obj %}
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const addMoneyForm = document.getElementById('add-money-form');
+    const addMoneyMessage = document.getElementById('add-money-message');
+
+    addMoneyForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const amount = document.getElementById('amount').value;
+        const password = document.getElementById('password').value;
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        fetch('{% url "add_money_to_wallet" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': csrfToken,
+            },
+            body: new URLSearchParams({
+                'amount': amount,
+                'password': password,
+            }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                addMoneyMessage.textContent = 'Money added successfully!';
+                addMoneyMessage.className = 'mt-4 text-green-600';
+                addMoneyForm.reset();
+                setTimeout(() => {
+                    location.reload();
+                }, 2000);
+            } else {
+                addMoneyMessage.textContent = data.error;
+                addMoneyMessage.className = 'mt-4 text-red-600';
+            }
+        })
+        .catch(error => {
+            console.error('Error adding money:', error);
+            addMoneyMessage.textContent = 'An unexpected error occurred. Please try again.';
+            addMoneyMessage.className = 'mt-4 text-red-600';
+        });
+    });
+});
+</script>
+{% endblock %}

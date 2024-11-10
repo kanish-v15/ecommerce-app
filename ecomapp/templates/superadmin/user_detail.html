@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Detail</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+            padding: 20px;
+        }
+        header {
+            background: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+        nav {
+            background: #444;
+            color: #fff;
+            padding: 10px;
+        }
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px;
+        }
+        .user-info {
+            background: #fff;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            background: #333;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>User Details</h1>
+    </header>
+    <nav>
+        <a href="{% url 'superadmin_dashboard' %}">Dashboard</a>
+        <a href="{% url 'superadmin_add_admin' %}">Add Admin</a>
+        <a href="{% url 'logout' %}">Logout</a>
+    </nav>
+    <div class="container">
+        <div class="user-info">
+            <h2>{{ user.username }}</h2>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>First Name:</strong> {{ user.first_name }}</p>
+            <p><strong>Last Name:</strong> {{ user.last_name }}</p>
+            <p><strong>User Type:</strong>{% if user.is_superuser %}Super Admin{% else %}{{ user.user_type|title }}{% endif %}</p>
+            <!-- <p><strong>Is Staff:</strong> {{ user.is_staff }}</p>
+            <p><strong>Is Superuser:</strong> {{ user.is_superuser }}</p> -->
+            <p><strong>Date Joined:</strong> {{ user.date_joined }}</p>
+            <p><strong>Last Login:</strong> {{ user.last_login }}</p>
+            <!-- <a href="{% url 'superadmin_edit_user' user.id %}" class="btn">Edit User</a> -->
+        </div>
+    </div>
+</body>
+</html>

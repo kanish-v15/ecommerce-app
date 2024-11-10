@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign Up Successful{% endblock %}
+
+{% block content %}
+<div style="background-color: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); max-width: 500px; margin: 0 auto; text-align: center;">
+    <h1 style="font-size: 2rem; color: #28a745; margin-bottom: 1rem;">Sign Up Successful</h1>
+    <p style="font-size: 1.125rem; margin-bottom: 1.5rem;">Welcome, {{ username }}! Your account has been created successfully.</p>
+    <a href="{% url 'login' %}" class="btn">Login</a>
+</div>
+{% endblock %}

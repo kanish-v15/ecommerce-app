@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<div style="background-color: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); max-width: 500px; margin: 0 auto;">
+    <h1 class="text-center" style="font-size: 2rem; margin-bottom: 1.5rem;">User Profile</h1>
+    <div style="margin-bottom: 1rem;">
+        <p style="font-weight: bold;">Username: {{ user.username }}</p>
+    </div>
+    <div style="margin-bottom: 1rem;">
+        <p style="font-weight: bold;">Email: {{ user.email }}</p>
+    </div>
+    <div style="margin-bottom: 1rem;">
+        <p style="font-weight: bold;">First Name: {{ user.first_name }}</p>
+    </div>
+    <div style="margin-bottom: 1rem;">
+        <p style="font-weight: bold;">Last Name: {{ user.last_name }}</p>
+    </div>
+    <div style="margin-bottom: 1rem;">
+        <p style="font-weight: bold;">User Type: {% if user.is_superuser %}Super Admin{% else %}{{ user.user_type|title }}{% endif %}</p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,152 @@
+<!-- templates/admin/reports.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Reports</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+            padding: 20px;
+        }
+        header {
+            background: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+        nav {
+            background: #444;
+            color: #fff;
+            padding: 10px;
+        }
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            background: #333;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: #555;
+        }
+        .report-results {
+            background: #fff;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Sales Reports</h1>
+    </header>
+    <nav>
+        <a href="{% url 'admin_dashboard' %}">Dashboard</a>
+        <a href="{% url 'admin_add_product' %}">Add Product</a>
+        <a href="{% url 'admin_manage_categories' %}">Manage Categories</a>
+        <a href="{% url 'admin_reports' %}">Sales Reports</a>
+        <a href="{% url 'logout' %}">Logout</a>
+    </nav>
+    <div class="container">
+        <h2>Generate Report</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div>
+                <label for="report_type">Report Type:</label>
+                <select name="report_type" id="report_type">
+                    <option value="date_range">Date Range</option>
+                    <option value="brand">Brand</option>
+                </select>
+            </div>
+            <div id="date_range_fields">
+                <label for="start_date">Start Date:</label>
+                <input type="date" name="start_date" id="start_date">
+                <label for="end_date">End Date:</label>
+                <input type="date" name="end_date" id="end_date">
+            </div>
+            <div id="brand_field" style="display: none;">
+                <label for="brand">Brand:</label>
+                <select name="brand" id="brand">
+                    {% for brand in brands %}
+                        <option value="{{ brand }}">{{ brand }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn">Generate Report</button>
+        </form>
+
+        {% if total_sales is not None %}
+            <div class="report-results">
+                <h2>Report Results</h2>
+                {% if report_type == 'date_range' %}
+                    <p><strong>Date Range:</strong> {{ start_date }} to {{ end_date }}</p>
+                {% elif report_type == 'brand' %}
+                    <p><strong>Brand:</strong> {{ brand }}</p>
+                {% endif %}
+                <p><strong>Total Sales:</strong> ₹{{ total_sales|floatformat:2 }}</p>
+                <p><strong>Total Quantity Sold:</strong> {{ total_quantity }}</p>
+            </div>
+        {% endif %}
+
+        {% if error %}
+            <p style="color: red;">{{ error }}</p>
+        {% endif %}
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var reportType = document.getElementById('report_type');
+            var dateRangeFields = document.getElementById('date_range_fields');
+            var brandField = document.getElementById('brand_field');
+
+            function updateFields() {
+                if (reportType.value === 'date_range') {
+                    dateRangeFields.style.display = 'block';
+                    brandField.style.display = 'none';
+                } else {
+                    dateRangeFields.style.display = 'none';
+                    brandField.style.display = 'block';
+                }
+            }
+
+            reportType.addEventListener('change', updateFields);
+            updateFields(); // Call once to set initial state
+        });
+    </script>
+</body>
+</html>

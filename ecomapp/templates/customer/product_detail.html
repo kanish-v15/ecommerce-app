@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div>
+        <img src="{{ product.image.url }}" height="300" width="300" alt="{{ product.name }}" class="w-full h-auto object-cover rounded">
+    </div>
+    <div>
+        <h1 class="text-3xl font-bold mb-4">{{ product.name }}</h1>
+        <p class="text-xl mb-4">Brand: {{ product.brand }}</p>
+        <p class="text-xl mb-4">Price: ₹{{ product.price }}</p>
+        <p class="mb-4">Description: {{ product.description }}</p>
+        <p class="mb-4">In Stock: {{ product.stock }}</p>
+        <form action="{% url 'add_to_cart' product.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Add to Cart</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Orders Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-8">Orders Dashboard</h1>
+    {% if page_obj %}
+        <div class="grid grid-cols-1 gap-6">
+            {% for order_detail in page_obj %}
+                <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                    <div class="p-4">
+                        <h2 class="text-xl font-semibold mb-2">Order #{{ order_detail.order.id }}</h2>
+                        <p class="text-gray-600 mb-2">Date: {{ order_detail.order.date_ordered|date:"F d, Y H:i" }}</p>
+                        <p class="text-gray-600 mb-2">Total: ₹{{ order_detail.order.total_price }}</p>
+                        <p class="text-gray-600 mb-4">Status: {{ order_detail.order.get_status_display }}</p>
+                        <!-- <h3 class="text-lg font-semibold mb-2">Items:</h3>
+                        <ul class="space-y-2">
+                            {% for item in order_detail.items %}
+                                <li class="flex items-center space-x-4">
+                                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-16 h-16 object-cover rounded">
+                                    <div>
+                                        <p class="font-medium">{{ item.product.name }}</p>
+                                        <p class="text-gray-600">Brand: {{ item.brand }}</p>
+                                        <p class="text-gray-600">Quantity: {{ item.quantity }}</p>
+                                        <p class="text-gray-600">Price: ₹{{ item.product.price }}</p>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div> -->
+                </div>
+            {% endfor %}
+        </div>
+        <div class="mt-8">
+            {% include "pagination.html" with page=page_obj %}
+        </div>
+    {% else %}
+        <p class="text-xl">You have no orders yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

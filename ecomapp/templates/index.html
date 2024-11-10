@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome to Ecom App{% endblock %}
+
+{% block content %}
+<div class="text-center">
+    <h1 style="font-size: 2.5rem; font-weight: bold; margin-bottom: 1rem;">Welcome to Ecom App</h1>
+    <p style="font-size: 1.25rem; margin-bottom: 2rem;">Your one-stop shop for all your e-commerce needs.</p>
+    {% if user.is_authenticated and not user.is_superuser and not user.is_staff %}
+        <p style="font-size: 1.5rem; margin-bottom: 1rem;">Hello, {{ user.username }}!</p>
+        <p style="font-size: 1.125rem;">Explore our products and start shopping today.</p>
+    {% elif user.is_superuser %}
+        <p style="font-size: 1.5rem; margin-bottom: 1rem;">Hello, {{ user.username }}!</p>
+        <a href="{% url 'superadmin_dashboard' %}" class="btn">Super Admin Dashboard</a>
+    {% elif user.is_staff %}
+        <p style="font-size: 1.5rem; margin-bottom: 1rem;">Hello, {{ user.username }}!</p>
+        <a href="{% url 'admin_dashboard' %}" class="btn">Admin Dashboard</a>
+    {% else %}
+        <div style="display: flex; justify-content: center; gap: 1rem;">
+            <a href="{% url 'login' %}" class="btn">Login</a>
+            <a href="{% url 'signup' %}" class="btn" style="background-color: #28a745;">Sign Up</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
